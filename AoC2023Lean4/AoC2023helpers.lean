@@ -16,11 +16,11 @@ def listOpt {α : Type*} : List (Option α) → List α
   | oa :: oas => match oa with
     | none => listOpt oas
     | some a => a :: listOpt oas
-
+/-
 def optNat : Option Nat → Nat
   | none => 0
   | some n => n
-
+ -/
 /-- TODO: Supercedes `optNat`, so remove the former. -/
 def optNum {R : Type*} [Zero R] : Option R → R
   | none => 0
