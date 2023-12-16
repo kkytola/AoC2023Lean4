@@ -172,7 +172,7 @@ section Char_helpers
 
 def Char.isNum (c : Char) : Bool := c.isAlphanum ∧ ¬c.isAlpha
 
-def Char.toDigit (c : Char) : Nat := optNat c.toString.toNat?
+def Char.toDigit (c : Char) : Nat := optNum c.toString.toNat?
 
 end Char_helpers -- section
 
