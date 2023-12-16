@@ -32,10 +32,6 @@ inductive Tile where
   | horiz
   | vert
 
-def optTile : Option Tile → Tile
-  | none => .empty
-  | some t => t
-
 def Tile.toChar : Tile → Char
   | .empty      => '.'
   | .slash      => '/'
