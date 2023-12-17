@@ -66,8 +66,8 @@ def applyXtoYeff' (xstoys : XtoYeff) (x : Nat) : Option Nat :=
 if none of the x ranges apply. -/
 def applyXtoYeff (xstoys : XtoYeff) (x : Nat) : Nat :=
   match applyXtoYeff' xstoys x with
-  | some y => y
-  | none => x
+  | some y  => y
+  | none    => x
 
 /-- A segment of indices, with minimum index and length of the segment part of the data. -/
 structure IndexSegment where

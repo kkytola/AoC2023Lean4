@@ -15,18 +15,18 @@ inductive Color where
 deriving BEq
 
 def readColor? : String → Option Color
-  | "red" => some Color.red
+  | "red"   => some Color.red
   | "green" => some Color.green
-  | "blue" => some Color.blue
-  | _ => none
+  | "blue"  => some Color.blue
+  | _       => none
 
 /-- A round consists of numbers of cubes of different colors drawn. -/
 def Round := Color → Nat
 
 def Round.mkRGB (r g b : Nat) : Round
-  | Color.red => r
+  | Color.red   => r
   | Color.green => g
-  | Color.blue => b
+  | Color.blue  => b
 
 open Color in
 instance : LE Round where

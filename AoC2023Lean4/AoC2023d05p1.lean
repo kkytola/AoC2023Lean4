@@ -66,8 +66,8 @@ def applyXtoYeff' (xstoys : XtoYeff) (x : Nat) : Option Nat :=
 if none of the x ranges apply. -/
 def applyXtoYeff (xstoys : XtoYeff) (x : Nat) : Nat :=
   match applyXtoYeff' xstoys x with
-  | some y => y
-  | none => x
+  | some y  => y
+  | none    => x
 
 /-- A number list parser. -/
 def readNumbers (data : String) : List Nat :=
