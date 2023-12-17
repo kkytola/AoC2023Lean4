@@ -62,17 +62,12 @@ deriving BEq
 def Contraption := ReaderT Grid Id
 deriving Monad, MonadReader
 
-/-- The grid stored in a read only state and . -/
+/-- The grid stored in a read only state and existing beams in a mutable state. -/
 def ContraptionWithBeams := StateT ((Int × Int) → List Dir) Contraption
 deriving Monad, MonadState
 
 instance : MonadReader Grid ContraptionWithBeams where
   read := do pure (← StateT.lift (do pure (← read)))
-
-/-- Create just a grid without any beams. -/
-def noBeams {α : Type} (contr : Contraption α) : ContraptionWithBeams α := do
-  MonadState.set (fun _ => [])
-  pure (← StateT.lift contr)
 
 /-- Try to create a single new beam, but discard if it exists already or is outside of the grid. -/
 def createBeam (x y : Int) (dir : Dir) : ContraptionWithBeams (Many ((Int × Int) × Dir)) := do
