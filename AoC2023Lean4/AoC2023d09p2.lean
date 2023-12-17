@@ -14,11 +14,8 @@ def List.consecutivePairs {α : Type*} (l : List α) : List (α × α) :=
 def List.differences {α : Type*} [Sub α] (l : List α) : List α :=
   l.consecutivePairs.map (fun p => p.2 - p.1)
 
--- Unnecessary?
-def List.isAllZeros {α : Type*} [Zero α] [BEq α] (l : List α) : Bool := l.all (· == 0)
-
 unsafe def iteratedDifferences {α : Type*} [BEq α] [Sub α] [Zero α] (l : List α) : List (List α) :=
-  if l.isAllZeros then [l]
+  if l.all (· == 0) then [l]
     else l :: iteratedDifferences l.differences
 
 unsafe def extendIteratedDifferences {α : Type*} [BEq α] [Sub α] [Add α] [Zero α] (ll : List (List α)) :
