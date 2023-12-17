@@ -13,12 +13,6 @@ inductive LensOper where
   | removal : String → LensOper
   | addition : String → Nat → LensOper
 
-def LensOper.toString : LensOper → String
-  | removal lab => s!"[REM:{lab}]"
-  | addition lab foclen => s!"[ADD:{lab}/{foclen}]"
-
-instance : ToString LensOper := ⟨LensOper.toString⟩
-
 def LensOper.hasHash (hash : Int) : LensOper → Bool
   | removal lab => lab.holidayHash == hash
   | addition lab _ => lab.holidayHash == hash

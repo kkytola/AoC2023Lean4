@@ -32,11 +32,6 @@ def List.locationsOfMirroring {α : Type*} [BEq α] (as : List α) : List Nat :=
 def Valley := List (List Char)
 deriving Inhabited
 
-def Valley.toString (val : Valley) : String :=
-  "\n".intercalate $ (fun row => "".intercalate (row.map Char.toString)) <$> val
-
-instance : ToString Valley := ⟨Valley.toString⟩
-
 def parseValley (data : String) : Valley := String.toList <$> data.trim.splitOn "\n"
 
 def parseValleys (data : String) : List Valley := parseValley <$> data.trim.splitOn "\n\n"

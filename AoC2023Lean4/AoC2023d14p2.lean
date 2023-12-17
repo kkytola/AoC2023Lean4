@@ -15,11 +15,6 @@ O.#..O.#.#
 def Platform := List (List Char)
 deriving Inhabited
 
-def Platform.toString (pf : Platform) : String :=
-  "\n".intercalate $ (fun row => "".intercalate (row.map Char.toString)) <$> pf
-
-instance : ToString Platform := ⟨Platform.toString⟩
-
 def Platform.toList (pf : Platform) : List (List Char) := pf
 
 def Platform.transpose (pf : Platform) : Platform := pf.toList.transpose

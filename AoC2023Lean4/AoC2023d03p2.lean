@@ -25,8 +25,6 @@ structure Symbol where
   pos : Position
 deriving BEq, DecidableEq
 
-instance : ToString Symbol := ⟨fun s => s!"'{s.sym}'@{s.pos}"⟩
-
 def Symbol.mkCXY (c : Char) (x y : Nat) : Symbol := { sym := c, pos := Position.mkXY x y}
 
 def readSymbols (data : String) : List Symbol :=

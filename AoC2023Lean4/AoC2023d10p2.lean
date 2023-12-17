@@ -21,14 +21,6 @@ def Quadrant.toZMod : Quadrant → Int
   | SW => 2
   | SE => 3
 
-def Quadrant.toString : Quadrant → String
-  | NE => "++"
-  | NW => "-+"
-  | SW => "--"
-  | SE => "+-"
-
-instance : ToString Quadrant := ⟨Quadrant.toString⟩
-
 def Quadrant.ofXY (x y : Int) : Quadrant :=
   if y < 0
     then
@@ -62,14 +54,6 @@ deriving BEq, Inhabited
 open Dir in
 def allDirections : List Dir := [N, E, S, W]
 
-def Dir.toString : Dir → String
-  | N => "N"
-  | E => "E"
-  | S => "S"
-  | W => "W"
-
-instance : ToString Dir := ⟨Dir.toString⟩
-
 def Dir.backwards : Dir → Dir
   | N => S
   | E => W
@@ -82,15 +66,7 @@ def Dir.toStep : Dir → Int × Int
   | S => ( 0, -1)
   | W => (-1,  0)
 
-def optDir (od : Option Dir) : Dir := match od with
-  | none => Dir.S
-  | some d => d
-
 abbrev Connection := Dir × Dir
-
-def optConnToString : Option Connection → String
-  | none => "___"
-  | some ee => s!"{ee.1}-{ee.2}"
 
 open Dir in
 def readTileType (c : Char) : Option Connection ⊕ Unit := match c with
@@ -114,9 +90,6 @@ structure Tile where
   y : Int
   conn : Option Connection
   anim : Bool := false
-
-instance : ToString Tile where
-  toString t := s!"[({t.x},{t.y}) : {optConnToString t.conn}]"
 
 def Tile.mkOfRead (x y : Int) : Option Connection ⊕ Unit → Tile
   | .inl conn' => {x := x, y := y, conn := conn'}

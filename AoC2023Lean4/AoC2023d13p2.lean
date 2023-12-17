@@ -32,11 +32,6 @@ def List.locationsOfMirroring {α : Type*} [BEq α] (as : List α) : List Nat :=
 def Valley := List (List Char)
 deriving Inhabited
 
-def Valley.toString (val : Valley) : String :=
-  "\n".intercalate $ (fun row => "".intercalate (row.map Char.toString)) <$> val
-
-instance : ToString Valley := ⟨Valley.toString⟩
-
 def Valley.toList (val : Valley) : List (List Char) := val
 
 def Valley.getRow? (val : Valley) (r : Nat) : Option (List Char) := val.toList[r]?
@@ -62,15 +57,6 @@ def Valley.desmudgeAt (val : Valley) (x y : Nat) : Valley :=
     | some row => row.set i (desmudgeOpt row[i]?)
     | none => []
   val.toList.set y (rowDesmudgeAt x val.toList[y]?)
-
--- Unnecessary
-def Valley.findSmudgePos (val : Valley) : List (Nat × Nat) :=
-  let origRefls := (val.transpose.locationsOfMirroring, val.locationsOfMirroring)
-  let xys := (List.range val.width).product (List.range val.height)
-  listOpt $ xys.map fun (x,y) =>
-    let val' := val.desmudgeAt x y
-    let newRefls := (val'.transpose.locationsOfMirroring, val'.locationsOfMirroring)
-    if newRefls == origRefls then none else some (x,y)
 
 def Valley.findSmudgePosAndLine' (val : Valley) : Many ((Nat × Nat) × (List Nat × List Nat)) := do
   let origRefls := (val.transpose.locationsOfMirroring, val.locationsOfMirroring)

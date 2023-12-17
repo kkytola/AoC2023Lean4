@@ -32,21 +32,12 @@ inductive Tile where
   | horiz
   | vert
 
-def Tile.toChar : Tile → Char
-  | .empty      => '.'
-  | .slash      => '/'
-  | .backslash  => '\\'
-  | .horiz      => '='
-  | .vert       => '|'
-
 def Char.toTile : Char → Tile
   | '/'   => .slash
   | '\\'  => .backslash
   | '-'   => .horiz
   | '|'   => .vert
   | _     => .empty
-
-instance : ToString Tile := ⟨(·.toChar.toString)⟩
 
 def Grid := List (List Tile)
 
@@ -60,27 +51,12 @@ def Grid.tileAt? (grid : Grid) (x y : Int) : Option Tile :=
   if x < 0 ∨ y < 0 then none
     else grid.rows[y.toNat]? >>= fun row => row[x.toNat]?
 
-def Grid.toString (grid : Grid) : String :=
-  "\n".intercalate $ (grid.rows.map fun row => "".intercalate (row.map (·.toChar.toString)))
-
-instance : ToString Grid := ⟨Grid.toString⟩
-
 inductive Dir where
   | left
   | right
   | up
   | down
 deriving BEq
-
-def Dir.toChar : Dir → Char
-  | .left   => '<'
-  | .right  => '>'
-  | .up     => '^'
-  | .down   => 'v'
-
-instance : ToString Dir := ⟨(·.toChar.toString)⟩
-
-def LocalBeams := List Dir
 
 /-- The grid stored in a read only state. -/
 def Contraption := ReaderT Grid Id
@@ -154,19 +130,6 @@ def keepAdvancing (steps : Nat) (bs : Many ((Int × Int) × Dir)) :
     match advancedBeams with
     | Many.none     => pure Many.none
     | Many.more _ _ => keepAdvancing s advancedBeams
-
-def localBeamsToChar : List Dir → Char
-  | []        => '.'
-  | d :: drs  => match drs with
-    | []      => d.toChar
-    | _ :: _  => (drs.length + 1).toChar
-
-def displayBeams : ContraptionWithBeams String := do
-  let grid ← read
-  let beams ← get
-  pure $  "\n".intercalate  $ (List.range grid.height).map  fun y =>
-          "".intercalate    $ (List.range grid.width).map   fun x =>
-                              (localBeamsToChar (beams (x, y))).toString
 
 def countEnergized : ContraptionWithBeams Nat := do
   let grid ← read

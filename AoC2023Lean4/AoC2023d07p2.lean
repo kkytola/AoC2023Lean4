@@ -15,8 +15,6 @@ structure Card where
 
 instance : BEq Card := ⟨fun a b => a.val == b.val⟩
 
-instance : ToString Card := ⟨fun card => s!"⌈{card.val}⌉"⟩
-
 def Card.value (card : Card) : Nat := 14 - optNum (cardCharList.indexOf card.val)
 def Card.value' (card : Card) : Nat := if card.val == 'J' then 0 else card.value
 
@@ -75,9 +73,6 @@ def String.toHand? (s : String) : Option Hand :=
     then pure { cards := s.toCardList, five := h }
     else none
 
-instance : ToString Hand where
-  toString hand := "‹" ++ (String.intercalate " " (toString <$> hand.cards)) ++ "›"
-
 inductive HandType
   | fiveOfKind
   | fourOfKind
@@ -87,17 +82,6 @@ inductive HandType
   | onePair
   | highCard
 deriving BEq
-
-def HandType.toString : HandType → String
-  | fiveOfKind => "5-of-a-kind"
-  | fourOfKind => "4-of-a-kind"
-  | fullHouse => "full-house"
-  | threeOfKind => "3-of-a-kind"
-  | twoPairs => "two-pairs"
-  | onePair => "one-pair"
-  | highCard => "high-card"
-
-instance : ToString HandType := ⟨HandType.toString⟩
 
 def HandType.toMultiplicities : HandType → List Nat
   | fiveOfKind =>   [5,0,0,0,0]
@@ -136,9 +120,6 @@ instance : DecidableRel (fun (H K : Hand) => H ≤ K) := fun _ _ => Bool.decEq _
 structure HandBid where
   hand : Hand
   bid : Nat
-
-instance : ToString HandBid where
-  toString hb := s!"⟨{hb.1} : {hb.2}⟩"
 
 instance : LE HandBid := ⟨fun HB KB => HB.hand ≤ KB.hand⟩
 

@@ -17,11 +17,6 @@ def expansionFactor := 1000000
 structure Cosmos where
   space : List (List Char)
 
-def Cosmos.toString (cosm : Cosmos) : String :=
-  "\n".intercalate ((fun lc => "".intercalate (lc.map Char.toString)) <$> cosm.space)
-
-instance : ToString Cosmos := ⟨Cosmos.toString⟩
-
 def Cosmos.transpose (cosm : Cosmos) : Cosmos := Cosmos.mk (cosm.space.transpose)
 
 def Cosmos.expandRows (cosm : Cosmos) : Cosmos :=

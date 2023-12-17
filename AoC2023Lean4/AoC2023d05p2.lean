@@ -77,9 +77,6 @@ structure IndexSegment where
 /-- The maximum index in an index segment. -/
 def IndexSegment.maxInd (iseg : IndexSegment) : Int := -1 + iseg.minInd + iseg.length
 
-instance : ToString IndexSegment where
-  toString iseg := s!"[{iseg.minInd}..{iseg.maxInd}]"
-
 /-- Breaking an index segment into (at most) two pieces at a specified index. -/
 def IndexSegment.breakAt (iseg : IndexSegment) (b : Int) : Many IndexSegment :=
   if b < iseg.minInd ∨ iseg.maxInd < b then pure iseg
