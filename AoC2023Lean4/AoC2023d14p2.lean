@@ -12,8 +12,11 @@ O.#..O.#.#
 #OO..#....
 -/
 
+def maxIterNum := 250
+def desiredIterations := 1000000000
+
 def Platform := List (List Char)
-deriving Inhabited
+deriving Inhabited, BEq
 
 def Platform.toList (pf : Platform) : List (List Char) := pf
 
@@ -38,13 +41,13 @@ def pileOs (segment : List Char) : List Char :=
 def rowTilt (row : List Char) : List Char :=
   ['#'].intercalate $ pileOs <$> row.splitOn '#'
 
-def Platform.tiltEast (pf : Platform) : Platform := rowTilt <$> pf.toList
+def Platform.tiltWest (pf : Platform) : Platform := rowTilt <$> pf.toList
 
-def Platform.tiltNorth (pf : Platform) : Platform := pf.transpose.tiltEast.transpose
+def Platform.tiltNorth (pf : Platform) : Platform := pf.transpose.tiltWest.transpose
 
 def Platform.tiltSouth (pf : Platform) : Platform := pf.mirrorNS.tiltNorth.mirrorNS
 
-def Platform.tiltWest (pf : Platform) : Platform := pf.mirrorEW.tiltEast.mirrorEW
+def Platform.tiltEast (pf : Platform) : Platform := pf.mirrorEW.tiltWest.mirrorEW
 
 def Platform.cycleNWSE (pf : Platform) : Platform :=
   pf.tiltNorth.tiltWest.tiltSouth.tiltEast
@@ -58,13 +61,27 @@ def Platform.eastLoading (pf : Platform) : Nat :=
 
 def Platform.northLoading (pf : Platform) : Nat := pf.transpose.eastLoading
 
+unsafe def iterateNWSE : List Platform → List Platform × Bool
+  | [] => ([], false)
+  | pf :: pfs =>
+    let newpf := pf.cycleNWSE
+    let flag : Bool := (pf :: pfs).contains newpf
+    if pfs.length > maxIterNum ∨ flag
+      then (newpf :: (pf :: pfs), flag)
+      else iterateNWSE (newpf :: (pf :: pfs))
+
 def parsePlatform (data : String) : Platform := String.toList <$> data.trim.splitOn "\n"
 
-def main : IO Unit := do
+unsafe def main : IO Unit := do
   let probInput := (← IO.FS.readFile "./AoC2023Lean4/data-AoC2023d14p1.txt").trim
   let platform := parsePlatform probInput
   IO.println ""
-  let loading := platform.transpose.tiltEast.eastLoading
+  let (iterations, foundRepeated) := iterateNWSE [platform]
+  let repeats := iterations.findIdxs (· == iterations[0]!)
+  let period := repeats[1]! - repeats[0]!
+  let untilStart := iterations.length - repeats[1]!
+  let goodIndex := period - 1 - (((desiredIterations - untilStart) % period))
+  let loading := (iterations[goodIndex]!).northLoading
   IO.println s!"Answer 2 (loading) : {loading}"
 
 --#eval main
